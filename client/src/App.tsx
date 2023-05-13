@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import Messaging from "./components/Messaging"
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import Messaging from "./components/Messaging";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
     <>
@@ -23,7 +23,7 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to IGNITE HMR
+          Edit <code>src/App.tsx</code> and save to IGNITE HMR!!
         </p>
       </div>
       <p className="read-the-docs">
@@ -31,7 +31,7 @@ function App() {
       </p>
       <Messaging />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

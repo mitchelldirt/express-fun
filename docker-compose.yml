@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  frontend:
+    container_name: app
+    image: app
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - "5173:5173"
+  backend:
+    container_name: api
+    image: api
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: base
+    ports:
+      - "8080:8080"
