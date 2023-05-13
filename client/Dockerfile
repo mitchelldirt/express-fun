@@ -1,4 +1,4 @@
-FROM node:alpine as base
+FROM --platform=linux/amd64 node:alpine as base
 
 WORKDIR /app
 

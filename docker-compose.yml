@@ -6,9 +6,13 @@ services:
     image: app
     restart: always
     build:
+      tags:
+        - "mitchellmudd.azurecr.io/samples/vitereact:latest"
       context: ./client
       dockerfile: Dockerfile
       target: base
+      platforms:
+        - "linux/amd64"
     ports:
       - "5173:5173"
   backend:
@@ -16,8 +20,12 @@ services:
     image: api
     restart: always
     build:
+      tags:
+        - "mitchellmudd.azurecr.io/samples/expressapi:latest"
       context: ./server
       dockerfile: Dockerfile
       target: base
+      platforms:
+        - "linux/amd64"
     ports:
       - "8080:8080"
