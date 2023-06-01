@@ -39,7 +39,7 @@ export default function Messaging() {
 
         if (newWs.readyState !== 0 && newWs.readyState !== 1) {
           newWs.close();
-          alert("WebSocket connection failed.");
+          console.error("WebSocket connection failed.");
           return;
         }
       }, 2000);
@@ -48,6 +48,19 @@ export default function Messaging() {
 
   return (
     <>
+    <button onClick={() => {
+      const messageDialong = document.getElementById("messaging")
+      
+      if (messageDialong && messageDialong instanceof HTMLDialogElement) {
+        messageDialong.showModal()
+      }}}>Open the dialog</button>
+    <dialog id="messaging">
+      <button onClick={() => {
+      const messageDialong = document.getElementById("messaging")
+
+      if (messageDialong && messageDialong instanceof HTMLDialogElement) {
+        messageDialong.close()
+      }}}>Close the dialog</button>
       <h1>Messaging</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="message">Message</label>
@@ -68,6 +81,7 @@ export default function Messaging() {
           <li key={index}>{message}</li>
         ))}
       </ul>
+    </dialog>
     </>
   );
 }
