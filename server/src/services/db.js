@@ -9,12 +9,18 @@ const pg_core_1 = require("drizzle-orm/pg-core");
 const drizzle_orm_1 = require("drizzle-orm");
 const postgres_1 = __importDefault(require("postgres"));
 exports.users = (0, pg_core_1.pgTable)("users", {
-    id: (0, pg_core_1.uuid)("id").default((0, drizzle_orm_1.sql) `get_random_uuid()`),
-    firstName: (0, pg_core_1.text)("first_name"),
-    lastName: (0, pg_core_1.text)("last_name"),
+    id: (0, pg_core_1.uuid)("id")
+        .default((0, drizzle_orm_1.sql) `get_random_uuid()`)
+        .primaryKey(),
+    firstName: (0, pg_core_1.text)("first_name").notNull(),
+    lastName: (0, pg_core_1.text)("last_name").notNull(),
     dateOfBirth: (0, pg_core_1.text)("date_of_birth"),
     gender: (0, pg_core_1.text)("gender"),
-    email: (0, pg_core_1.text)("email"),
+    email: (0, pg_core_1.text)("email").notNull(),
+}, (users) => {
+    return {
+        emailConstraint: (0, pg_core_1.uniqueIndex)("email_idx").on(users.email),
+    };
 });
 // for query purposes
 const queryClient = (0, postgres_1.default)("postgresql://mitchellm@localhost:5432/test");
