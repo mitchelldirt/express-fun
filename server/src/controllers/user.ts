@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { NewUser, User } from "../services/db";
+import { NewUser, User, insertUserSchema } from "../services/db";
 import { insertUser, selectAllUsers } from "../models/user";
 import { z } from "zod";
 
@@ -11,16 +11,26 @@ async function getAllUsers(req: Request, res: Response) {
 async function createUser(req: Request, res: Response) {
   if (req.body) {
     const user: NewUser = {
-      firstName: z.string().parse(req.body.firstName),
-      lastName: z.string().parse(req.body.lastName),
-      email: z.string().email().parse(req.body.email),
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
       gender: req.body.gender,
       dateOfBirth: req.body.dateOfBirth,
     };
 
-    const newUser = await insertUser(user);
+    const validatedUser = insertUserSchema.safeParse(user);
 
-    res.send("User created: " + newUser);
+    if (validatedUser.success === true) {
+      try {
+        const newUser = await insertUser(user);
+        console.log(newUser);
+        res.send("User created: their ID is " + newUser[0].insertedId);
+      } catch (e) {
+        res.status(400).send({ Error: "Duplicate email" });
+      }
+    } else {
+      res.status(400).send(validatedUser.error);
+    }
   }
 }
 

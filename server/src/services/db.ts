@@ -2,33 +2,34 @@ import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import {
   pgTable,
-  serial,
   text,
   varchar,
   uuid,
-  uniqueIndex,
+  date,
+  pgEnum,
 } from "drizzle-orm/pg-core";
-import { InferModel, sql } from "drizzle-orm";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { InferModel, sql, Table } from "drizzle-orm";
 import postgres from "postgres";
+import { z } from "zod";
 
-export const users = pgTable(
-  "users",
-  {
-    id: uuid("id")
-      .default(sql`get_random_uuid()`)
-      .primaryKey(),
-    firstName: text("first_name").notNull(),
-    lastName: text("last_name").notNull(),
-    dateOfBirth: text("date_of_birth"),
-    gender: text("gender"),
-    email: text("email").notNull(),
-  },
-  (users) => {
-    return {
-      emailConstraint: uniqueIndex("email_idx").on(users.email),
-    };
-  }
-);
+const genderEnum = pgEnum("gender", ["male", "female", "other"]);
+
+export const users = pgTable("users", {
+  id: uuid("id")
+    .default(sql`get_random_uuid()`)
+    .primaryKey(),
+  firstName: varchar("first_name", { length: 50 }).notNull(),
+  lastName: varchar("last_name", { length: 50 }).notNull(),
+  dateOfBirth: date("date_of_birth"),
+  gender: genderEnum("gender"),
+  email: text("email").notNull(),
+});
+
+export const selectUserSchema = createSelectSchema(users);
+export const insertUserSchema = createInsertSchema(users, {
+  email: z.string().email(),
+});
 
 export type User = InferModel<typeof users, "select">;
 export type NewUser = InferModel<typeof users, "insert">;

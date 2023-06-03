@@ -10,6 +10,9 @@ dependencies:
   drizzle-orm:
     specifier: ^0.26.3
     version: 0.26.3(postgres@3.3.5)
+  drizzle-zod:
+    specifier: ^0.4.3
+    version: 0.4.3(drizzle-orm@0.26.3)(zod@3.21.4)
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -505,6 +508,16 @@ packages:
         optional: true
     dependencies:
       postgres: 3.3.5
+    dev: false
+
+  /drizzle-zod@0.4.3(drizzle-orm@0.26.3)(zod@3.21.4):
+    resolution: {integrity: sha512-VyOMD88lyLZE+BeujYzXnRLxsREOJPfi3hVw12EWMMpu7e6IR6sVNlMoo8xPPuQSCbNSbUjfIyICnItwG+fmcA==}
+    peerDependencies:
+      drizzle-orm: '>=0.23.13'
+      zod: '*'
+    dependencies:
+      drizzle-orm: 0.26.3(postgres@3.3.5)
+      zod: 3.21.4
     dev: false
 
   /ee-first@1.1.1:

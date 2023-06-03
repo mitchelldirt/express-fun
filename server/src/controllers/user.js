@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const db_1 = require("../services/db");
 const user_1 = require("../models/user");
-const zod_1 = require("zod");
 function getAllUsers(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const users = yield (0, user_1.selectAllUsers)();
@@ -21,14 +21,26 @@ function createUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         if (req.body) {
             const user = {
-                firstName: zod_1.z.string().parse(req.body.firstName),
-                lastName: zod_1.z.string().parse(req.body.lastName),
-                email: zod_1.z.string().email().parse(req.body.email),
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
                 gender: req.body.gender,
                 dateOfBirth: req.body.dateOfBirth,
             };
-            const newUser = yield (0, user_1.insertUser)(user);
-            res.send("User created: " + newUser);
+            const validatedUser = db_1.insertUserSchema.safeParse(user);
+            if (validatedUser.success === true) {
+                try {
+                    const newUser = yield (0, user_1.insertUser)(user);
+                    console.log(newUser);
+                    res.send("User created: their ID is " + newUser[0].insertedId);
+                }
+                catch (e) {
+                    res.status(400).send({ Error: "Duplicate email" });
+                }
+            }
+            else {
+                res.status(400).send(validatedUser.error);
+            }
         }
     });
 }
