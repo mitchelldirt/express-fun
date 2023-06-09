@@ -76,7 +76,7 @@ export default function Messaging() {
       </ul>
 
       <h2>Sent Messages</h2>
-      <ul>
+      <ul className="bg-red-500">
         {sentMessages.map((message, index) => (
           <li key={index}>{message}</li>
         ))}
